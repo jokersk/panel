@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/article/list',
+    url: 'http://192.168.1.121:8000/api/order/list',
     method: 'get',
     params: query
   })

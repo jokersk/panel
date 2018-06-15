@@ -33,6 +33,7 @@ export const constantRouterMap = [
     path: '',
     component: Layout,
     redirect: 'dashboard',
+    hidden: true,
     children: [{
       path: 'dashboard',
       component: () => import('@/views/dashboard/index'),
@@ -44,6 +45,7 @@ export const constantRouterMap = [
     path: '/documentation',
     component: Layout,
     redirect: '/documentation/index',
+    hidden: true,
     children: [{
       path: 'index',
       component: () => import('@/views/documentation/index'),
@@ -55,6 +57,7 @@ export const constantRouterMap = [
     path: '/guide',
     component: Layout,
     redirect: '/guide/index',
+    hidden: true,
     children: [{
       path: 'index',
       component: () => import('@/views/guide/index'),
@@ -75,7 +78,8 @@ export const asyncRouterMap = [
     path: '/permission',
     component: Layout,
     redirect: '/permission/index',
-    alwaysShow: true, // will always show the root menu
+    // alwaysShow: true, // will always show the root menu
+    hidden: true,
     meta: {
       title: 'permission',
       icon: 'lock',
@@ -103,6 +107,7 @@ export const asyncRouterMap = [
   {
     path: '/icon',
     component: Layout,
+    hidden: true,
     children: [{
       path: 'index',
       component: () => import('@/views/svg-icons/index'),
@@ -116,6 +121,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: 'noredirect',
     name: 'component-demo',
+    hidden: true,
     meta: {
       title: 'components',
       icon: 'component'
@@ -142,6 +148,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: 'noredirect',
     name: 'charts',
+    hidden: true,
     meta: {
       title: 'charts',
       icon: 'chart'
@@ -156,6 +163,7 @@ export const asyncRouterMap = [
   {
     path: '/tab',
     component: Layout,
+    hidden: true,
     children: [{
       path: 'index',
       component: () => import('@/views/tab/index'),
@@ -169,17 +177,18 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/table/complex-table',
     name: 'table',
+    alwaysShow: true,
     meta: {
-      title: 'Table',
+      title: 'Orders',
       icon: 'table'
     },
     children: [
-      { path: 'dynamic-table', component: () => import('@/views/table/dynamicTable/index'), name: 'dynamicTable', meta: { title: 'dynamicTable' }},
-      { path: 'drag-table', component: () => import('@/views/table/dragTable'), name: 'dragTable', meta: { title: 'dragTable' }},
-      { path: 'inline-edit-table', component: () => import('@/views/table/inlineEditTable'), name: 'inlineEditTable', meta: { title: 'inlineEditTable' }},
-      { path: 'tree-table', component: () => import('@/views/table/treeTable/treeTable'), name: 'treeTableDemo', meta: { title: 'treeTable' }},
-      { path: 'custom-tree-table', component: () => import('@/views/table/treeTable/customTreeTable'), name: 'customTreeTableDemo', meta: { title: 'customTreeTable' }},
-      { path: 'complex-table', component: () => import('@/views/table/complexTable'), name: 'complexTable', meta: { title: 'complexTable' }}
+      // { path: 'dynamic-table', component: () => import('@/views/table/dynamicTable/index'), hidden: true, name: 'dynamicTable', meta: { title: 'dynamicTable' }},
+      // { path: 'drag-table', component: () => import('@/views/table/dragTable'), hidden: true, name: 'dragTable', meta: { title: 'dragTable' }},
+      { path: 'inline-edit-table', component: () => import('@/views/table/inlineEditTable'), name: 'inlineEditTable', meta: { title: 'Orders Lists' }}
+      // { path: 'tree-table', component: () => import('@/views/table/treeTable/treeTable'), name: 'treeTableDemo', meta: { title: 'treeTable' }},
+      // { path: 'custom-tree-table', component: () => import('@/views/table/treeTable/customTreeTable'), name: 'customTreeTableDemo', meta: { title: 'customTreeTable' }},
+      // { path: 'complex-table', component: () => import('@/views/table/complexTable'), name: 'complexTable', meta: { title: 'complexTable' }}
     ]
   },
 
@@ -188,6 +197,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/example/list',
     name: 'example',
+    hidden: true,
     meta: {
       title: 'example',
       icon: 'example'
@@ -204,6 +214,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: 'noredirect',
     name: 'errorPages',
+    hidden: true,
     meta: {
       title: 'errorPages',
       icon: '404'
@@ -217,6 +228,7 @@ export const asyncRouterMap = [
   {
     path: '/error-log',
     component: Layout,
+    hidden: true,
     redirect: 'noredirect',
     children: [{ path: 'log', component: () => import('@/views/errorLog/index'), name: 'errorLog', meta: { title: 'errorLog', icon: 'bug' }}]
   },
@@ -226,6 +238,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/excel/export-excel',
     name: 'excel',
+    hidden: true,
     meta: {
       title: 'excel',
       icon: 'excel'
@@ -241,7 +254,8 @@ export const asyncRouterMap = [
     path: '/zip',
     component: Layout,
     redirect: '/zip/download',
-    alwaysShow: true,
+    // alwaysShow: true,
+    hidden: true,
     meta: { title: 'zip', icon: 'zip' },
     children: [{ path: 'download', component: () => import('@/views/zip/index'), name: 'exportZip', meta: { title: 'exportZip' }}]
   },
@@ -249,6 +263,7 @@ export const asyncRouterMap = [
   {
     path: '/theme',
     component: Layout,
+    hidden: true,
     redirect: 'noredirect',
     children: [{ path: 'index', component: () => import('@/views/theme/index'), name: 'theme', meta: { title: 'theme', icon: 'theme' }}]
   },
@@ -256,6 +271,7 @@ export const asyncRouterMap = [
   {
     path: '/clipboard',
     component: Layout,
+    hidden: true,
     redirect: 'noredirect',
     children: [{ path: 'index', component: () => import('@/views/clipboard/index'), name: 'clipboardDemo', meta: { title: 'clipboardDemo', icon: 'clipboard' }}]
   },
@@ -263,6 +279,7 @@ export const asyncRouterMap = [
   {
     path: '/i18n',
     component: Layout,
+    hidden: true,
     children: [{ path: 'index', component: () => import('@/views/i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
   },
 
