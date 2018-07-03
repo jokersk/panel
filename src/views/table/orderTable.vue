@@ -2,27 +2,24 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input @keyup.enter.native="handleFilter" 
-            style="width: 200px;" class="filter-item" placeholder="undone order number" v-model="listQuery.title">
+            style="width: 200px;" class="filter-item" 
+              placeholder="undone order number" v-model="listQuery.orderNumber">
       </el-input>
-      <!-- <el-select clearable style="width: 90px" class="filter-item" v-model="listQuery.importance" :placeholder="$t('table.importance')">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item">
-        </el-option>
-      </el-select>
-      <el-select clearable class="filter-item" style="width: 130px" v-model="listQuery.type" :placeholder="$t('table.type')">
-        <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key">
-        </el-option>
-      </el-select>
-      <el-select @change='handleFilter' style="width: 140px" class="filter-item" v-model="listQuery.sort">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
-        </el-option>
-      </el-select> -->
+      <el-input @keyup.enter.native="handleFilter" 
+            style="width: 200px;" class="filter-item" 
+              placeholder="Client Email" v-model="listQuery.billing_email">
+      </el-input>
+      <el-input @keyup.enter.native="handleFilter" 
+            style="width: 200px;" class="filter-item" 
+              placeholder="telephone" v-model="listQuery.billing_telephone">
+      </el-input>
+      
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">{{$t('table.search')}}</el-button>
-      <!-- <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">{{$t('table.add')}}</el-button> -->
-      <!-- <el-button class="filter-item" type="primary" :loading="downloadLoading" v-waves icon="el-icon-download" @click="handleDownload">{{$t('table.export')}}</el-button> -->
-      <!-- <el-checkbox class="filter-item" style='margin-left:15px;' @change='tableKey=tableKey+1' v-model="showReviewer">{{$t('table.reviewer')}}</el-checkbox> -->
+      
     </div>
 
-    <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
+    <el-table :key='tableKey' :data="list" v-loading="listLoading" 
+          element-loading-text="loading..." border fit highlight-current-row
       style="width: 100%">
      
       <el-table-column width="180px" align="center" label="DATE">
@@ -35,12 +32,12 @@
           <el-tag :type="scope.row.status | statusFilter">{{scope.row.OrderStatus}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column  label="UNDONE ORDER ID" width="170">
+      <el-table-column  label="UNDONE ORDER #" width="170">
         <template slot-scope="scope">
           <span>{{scope.row.order_ref_id}}</span>
         </template>
       </el-table-column>
-       <el-table-column width="190" label="CITYCHAIN ORDER ID">
+       <el-table-column width="190" label="CITYCHAIN ORDER #">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
             <el-input class="edit-input" size="small" v-model="scope.row.citychain_id"></el-input>
@@ -49,15 +46,15 @@
           <span v-else>{{ scope.row.citychain_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="DELIVERY AT" width="160">
+      <el-table-column align="center" label="DELIVERED (UNDONE)" width="180">
         <template slot-scope="scope">
           <span v-if="scope.row.citychain">{{scope.row.citychain.delivery_at}}</span>
         </template> 
       </el-table-column>
 
 
-      <el-table-column align="center" label="RECEIVED" width="160">
-        <template slot-scope="scope">
+      <el-table-column align="center" label="RECEIVED (CITYCHAIN)" width="200">
+        <template slot-scope="scope" v-if="scope.row.ship_to_pos">
           <el-switch v-if="scope.row.showReceivedButton" v-model="scope.row.hasReceived" @change="updateReceived(scope.row)" ></el-switch>
           <span v-if="scope.row.citychain && scope.row.citychain.received_at">{{scope.row.citychain.received_at}}</span>
         </template> 
@@ -66,67 +63,68 @@
       <el-table-column align="center" :label="$t('table.actions')" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{$t('table.edit')}}</el-button>
-        
-          
         </template>
       </el-table-column>
       
-      <!-- <el-table-column min-width="150px" :label="$t('table.title')">
-        <template slot-scope="scope">
-          <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.title}}</span>
-          <el-tag>{{scope.row.type | typeFilter}}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column width="110px" align="center" :label="$t('table.author')">
-        <template slot-scope="scope">
-          <span>{{scope.row.author}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="110px" v-if='showReviewer' align="center" :label="$t('table.reviewer')">
-        <template slot-scope="scope">
-          <span style='color:red;'>{{scope.row.reviewer}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="80px" :label="$t('table.importance')">
-        <template slot-scope="scope">
-          <svg-icon v-for="n in +scope.row.importance" icon-class="star" class="meta-item__icon" :key="n"></svg-icon>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" :label="$t('table.readings')" width="95">
-        <template slot-scope="scope">
-          <span v-if="scope.row.pageviews" class="link-type" @click='handleFetchPv(scope.row.pageviews)'>{{scope.row.pageviews}}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column class-name="status-col" :label="$t('table.status')" width="100">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" :label="$t('table.actions')" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{$t('table.edit')}}</el-button>
-          <el-button v-if="scope.row.status!='published'" size="mini" type="success" @click="handleModifyStatus(scope.row,'published')">{{$t('table.publish')}}
-          </el-button>
-          <el-button v-if="scope.row.status!='draft'" size="mini" @click="handleModifyStatus(scope.row,'draft')">{{$t('table.draft')}}
-          </el-button>
-          <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">{{$t('table.delete')}}
-          </el-button>
-        </template>
-      </el-table-column> -->
+      
     </el-table>
 
-    <div class="pagination-container">
-      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="listQuery.page" :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
-      </el-pagination>
-    </div>
+
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      
+      <el-row>
+        <el-col :span="6">
+            ID: 
+        </el-col>
+        <el-col :span="6">
+          {{openingOrder.id}}
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="6">
+            Order_ref_id: 
+        </el-col>
+        <el-col :span="6">
+          {{openingOrder.order_ref_id}}
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="6">
+            Email: 
+        </el-col>
+        <el-col :span="6">
+          {{openingOrder.billing_email}}
+        </el-col>
+      </el-row>
+       <el-row>
+        <el-col :span="6">
+            telephone: 
+        </el-col>
+        <el-col :span="6">
+          {{openingOrder.billing_telephone}}
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="6">
+            Address: 
+        </el-col>
+        <el-col :span="6">
+          {{openingOrder.shipping_address}} <br>
+          {{openingOrder.shipping_address2}}
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="6">
+            CITYCHAIN ORDER ID: 
+        </el-col>
+        <el-col :span="6">
+          <el-input class="edit-input" size="small" v-model="openingOrder.citychain_id"></el-input>
+        </el-col>
+      </el-row>
+
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{$t('table.cancel')}}</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">{{$t('table.confirm')}}</el-button>
-        <el-button v-else type="primary" @click="updateData">{{$t('table.confirm')}}</el-button>
+        <el-button type="primary" @click="updateData(openingOrder)">{{$t('table.confirm')}}</el-button>
       </div>
     </el-dialog>
 
@@ -144,9 +142,11 @@
 </template>
 
 <script>
+
 import { fetchList, updateOrder } from '@/api/orders'
-import waves from '@/directive/waves' 
+import waves from '@/directive/waves'
 import { parseTime } from '@/utils'
+import * as _ from 'lodash'
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
@@ -203,7 +203,8 @@ export default {
         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
         title: [{ required: true, message: 'title is required', trigger: 'blur' }]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      openingOrder: ''
     }
   },
   filters: {
@@ -226,23 +227,32 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-
         this.list = response.data.orders.map(v => {
-          this.$set(v, 'edit', false) 
+          this.$set(v, 'edit', false)
           v.showReceivedButton = false
-          
-          if(v.citychain && v.citychain.received_at) v.hasReceived = true
+          if (v.citychain && v.citychain.received_at) v.hasReceived = true
           else {
             v.hasReceived = false
             v.showReceivedButton = true
-          } 
-
-          v.originalCityId = v.citychain_id //  will be used when user click the cancel botton
-
+          }
+          v.originalCityId = v.citychain ? v.citychain.citychain_order_id : v.citychain_id
           return v
         })
-        
-
+        if (!!this.listQuery.orderNumber) {
+          this.list = this.list.filter(list => {
+            return _.includes(list.order_ref_id, this.listQuery.orderNumber)
+          })
+        }
+        if (!!this.listQuery.billing_email) {
+          this.list = this.list.filter(list => {
+            return this.listQuery.billing_email === list.billing_email
+          })
+        }
+        if (!!this.listQuery.billing_telephone) {
+          this.list = this.list.filter(list => {
+            return this.listQuery.billing_telephone === list.billing_telephone
+          })
+        }
         this.total = response.data.total
         this.listLoading = false
       })
@@ -281,59 +291,22 @@ export default {
       this.resetTemp()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    createData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
-          createArticle(this.temp).then(() => {
-            this.list.unshift(this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: '创建成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
       this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
+      this.openingOrder = row
     },
-    updateData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateArticle(tempData).then(() => {
-            for (const v of this.list) {
-              if (v.id === this.temp.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.temp)
-                break
-              }
-            }
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: '更新成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
+    updateData(row) {
+      updateOrder({ 'undone_id': row.id, 'citychain_order_id': row.citychain_id }).then(response => {
+        row.citychain = response.data
+        this.dialogFormVisible = false
+        this.$message({
+          message: 'CityChain Order Id has been edited',
+          type: 'success'
+        })
       })
     },
     handleDelete(row) {
@@ -346,11 +319,37 @@ export default {
       const index = this.list.indexOf(row)
       this.list.splice(index, 1)
     },
-    handleFetchPv(pv) {
-      // fetchPv(pv).then(response => {
-      //   this.pvData = response.data.pvData
-      //   this.dialogPvVisible = true
-      // })
+    updateReceived(row) {
+      console.log(row)
+      if (!row.citychain_id) {
+        this.$message({
+          message: 'Please Input CityChain Order Id',
+          type: 'warning'
+        })
+        row.hasReceived = false
+        return false
+      }
+
+      if (row.hasReceived) {
+        this.$confirm('確定收貨後，系統將會發送電子郵件通知客人到店拿取貨品。要確定收貨及發送電子郵件嗎？')
+          .then(_ => {
+            this.listLoading = true
+            updateOrder({ 'undone_id': row.id, 'updateReceived': 1 }).then(response => {
+              this.listLoading = false
+              if (response.data) {
+                row.citychain.received_at = response.data.received_at
+                row.showReceivedButton = false
+              }
+              this.$message({
+                message: 'Update Success',
+                type: 'success'
+              })
+            })
+          })
+          .catch(_ => {
+            row.hasReceived = false
+          })
+      }
     },
     handleDownload() {
       this.downloadLoading = true

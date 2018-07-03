@@ -20,13 +20,11 @@ const userMap = {
 export default {
   loginByUsername: config => {
     const { username, password } = JSON.parse(config.body)
-    if(username == "admin" && password == "city_undone") 
-      return userMap[username]
+    if (username === 'admin' && password === 'city_undone') { return userMap[username] }
     else return false
   },
   getUserInfo: config => {
     const { token } = param2Obj(config.url)
-    
     if (userMap[token]) {
       return userMap[token]
     } else {

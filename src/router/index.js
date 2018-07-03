@@ -185,10 +185,10 @@ export const asyncRouterMap = [
     children: [
       // { path: 'dynamic-table', component: () => import('@/views/table/dynamicTable/index'), hidden: true, name: 'dynamicTable', meta: { title: 'dynamicTable' }},
       // { path: 'drag-table', component: () => import('@/views/table/dragTable'), hidden: true, name: 'dragTable', meta: { title: 'dragTable' }},
-      { path: 'inline-edit-table', component: () => import('@/views/table/inlineEditTable'), name: 'inlineEditTable', meta: { title: 'Orders Lists' }}
+      // { path: 'inline-edit-table', component: () => import('@/views/table/inlineEditTable'), name: 'inlineEditTable', meta: { title: 'Orders Lists' }},
       // { path: 'tree-table', component: () => import('@/views/table/treeTable/treeTable'), name: 'treeTableDemo', meta: { title: 'treeTable' }},
       // { path: 'custom-tree-table', component: () => import('@/views/table/treeTable/customTreeTable'), name: 'customTreeTableDemo', meta: { title: 'customTreeTable' }},
-      // { path: 'complex-table', component: () => import('@/views/table/complexTable'), name: 'complexTable', meta: { title: 'complexTable' }}
+      { path: 'complex-table', component: () => import('@/views/table/orderTable'), name: 'orderTable', meta: { title: 'Orders Lists' }}
     ]
   },
 
